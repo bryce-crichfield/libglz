@@ -1,31 +1,59 @@
 #include <iostream>
 
 #include "window/window.h"
-int main(void) {
-    gl::Window& window = gl::Window::init();
-    window.title("Test Window");
-    window.width(800);
-    window.height(600);
-    window.visible(true);
 
-    window.onButton([&](gl::event::Button event) {
-        if (event.button == gl::input::Button::Left &&
-            event.action == gl::input::Action::Press) {
-            std::cout << "Left mouse button pressed" << std::endl;
-        }
-    });
+void testMultWindows() {
+    gl::WindowFactory& factory = gl::WindowFactory::instance();
 
-    window.onKey([&](gl::event::Key event) {
-        if (event.key == gl::input::Key::Escape &&
-            event.action == gl::input::Action::Press) {
-            window.closed(true);
-        }
-    });
+    gl::Window& w1 = factory.create();
+    w1.title("w1");
+    w1.width(300);
+    w1.height(300);
+    w1.isVisible(true);
+    w1.makeCurrent();
+    w1.awaitEvents();
 
-    window.awaitEvents();
-    while (!window.closed()) {
-        window.pollEvents();
-        window.flush();
+    gl::Window& w2 = factory.create();
+    w2.title("w2");
+    w2.width(300);
+    w2.height(300);
+    w2.isVisible(true);
+    w2.makeCurrent();
+    w2.awaitEvents();
+    auto closed = false;
+    while (!closed) {
+        w1.makeCurrent();
+        w1.pollEvents();
+        w2.makeCurrent();
+        w2.pollEvents();
+
+        w1.makeCurrent();
+        w1.flush();
+        w2.makeCurrent();
+        w2.flush();
+        closed = w1.isClosed() || w2.isClosed();
     }
+}
+
+void testCallbacks() {
+    gl::WindowFactory& factory = gl::WindowFactory::instance();
+
+    gl::Window& w1 = factory.create();
+
+    w1.isVisible(true);
+    w1.makeCurrent();
+    w1.awaitEvents();
+    w1.onMove([](gl::event::Move move) {
+        std::cout << "mouse moved to " << move.x << ", " << move.y << std::endl;
+    });
+
+    while (!w1.isClosed()) {
+        w1.pollEvents();
+        w1.flush();
+    }
+}
+
+int main(void) {
+    testCallbacks();
     return 0;
 }
