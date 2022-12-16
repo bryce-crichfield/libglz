@@ -6,10 +6,10 @@
 #include <string>
 
 /* -------------------------------------------------------------------------- */
-/*                               Window Factory                               */
+/*                               Window Manager                               */
 /* -------------------------------------------------------------------------- */
 
-gl::WindowFactory::WindowFactory() {
+gl::WindowManager::WindowManager() {
     auto errorCallback = [](int error, const char* description) {
         std::cout << "GLFW Error: " << description << std::endl;
     };
@@ -22,20 +22,20 @@ gl::WindowFactory::WindowFactory() {
     }
 }
 
-gl::WindowFactory::~WindowFactory() {
+gl::WindowManager::~WindowManager() {
     glfwTerminate();
     glfwSetErrorCallback(NULL);
 }
 
-static gl::WindowFactory* window_factory_instance;
-gl::WindowFactory& gl::WindowFactory::instance() {
+static gl::WindowManager* window_factory_instance;
+std::shared_ptr<gl::WindowManager> gl::WindowManager::instance() {
     if (!window_factory_instance) {
-        window_factory_instance = new gl::WindowFactory();
+        window_factory_instance = new gl::WindowManager();
     }
-    return *window_factory_instance;
+    return std::shared_ptr<gl::WindowManager>(window_factory_instance);
 }
 
-gl::Window& gl::WindowFactory::create() {
+gl::Window& gl::WindowManager::create() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -191,7 +191,8 @@ bool gl::Window::isClosed() {
 }
 
 void gl::Window::isClosed(bool enable) {
-    if (enable) glfwSetWindowShouldClose(m_pointer, true);
+    if (enable)
+        glfwSetWindowShouldClose(m_pointer, true);
 }
 
 bool gl::Window::hasCursor() {

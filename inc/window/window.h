@@ -3,23 +3,30 @@
 #include <functional>
 #include <glfw/glfw3.h>
 #include <string>
+#include <memory>
 
 /* -------------------------------------------------------------------------- */
 /*                                   Window                                   */
 /* -------------------------------------------------------------------------- */
 namespace gl {
-class WindowFactory;
+class WindowManager;
 class Window;
 
-class WindowFactory {
+// Singleton object responsible for the lifetime of all windows
+// and the underlying windowing context.  Windows cannot be created
+// or exist outside the lifetime of this object.
+class WindowManager {
   private:
-    WindowFactory();
-    WindowFactory(const WindowFactory&) = delete;
-    WindowFactory& operator=(const WindowFactory&) = delete;
+    WindowManager();
+    WindowManager(const WindowManager&) = delete;
+    WindowManager& operator=(const WindowManager&) = delete;
 
   public:
-    static WindowFactory& instance();
-    ~WindowFactory();
+    // TODO: Shared pointer is unlikely necessary, could force single reference
+    // Returns a pointer to the singleton instance of the WindowManager
+    // object. The pointer may be shared by others.
+    static std::shared_ptr<WindowManager> instance();
+    ~WindowManager();
     Window& create();
 };
 
@@ -37,7 +44,7 @@ class Window {
     std::function<void(gl::event::FrameBufferResize)> m_framebuffer_resize_callback;
     std::function<void(gl::event::Position)> m_position_callback;
     Window() = delete;
-    friend class WindowFactory;
+    friend class WindowManager;
 
     Window(GLFWwindow* pointer);
     Window(const Window&) = delete;
