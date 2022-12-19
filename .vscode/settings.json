@@ -6,7 +6,7 @@
     "**/CVS": false,
     "**/.DS_Store": false,
     "**/Thumbs.db": false,
-    "lib/src": true,
+    "lib/src": false,
     "lib": false,
     "build": true,
     ".vscode": true,
