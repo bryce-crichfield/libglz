@@ -8,9 +8,9 @@
     "**/Thumbs.db": false,
     "lib/src": false,
     "lib": false,
-    "build": true,
-    ".vscode": true,
-    ".clang-format": true,
+    "build": false,
+    ".vscode": false,
+    ".clang-format": false,
     "src": false,
     "inc": false
   },
