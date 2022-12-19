@@ -1,7 +1,7 @@
 #pragma once
 #include "event.h"
 #include <functional>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include <string>
 #include <memory>
 
@@ -22,10 +22,9 @@ class WindowManager {
     WindowManager& operator=(const WindowManager&) = delete;
 
   public:
-    // TODO: Shared pointer is unlikely necessary, could force single reference
     // Returns a pointer to the singleton instance of the WindowManager
     // object. The pointer may be shared by others.
-    static std::shared_ptr<WindowManager> instance();
+    static WindowManager& instance();
     ~WindowManager();
     Window& create();
 };

@@ -1,9 +1,9 @@
-#include "window/window.h"
-#include <glfw/glfw3.h>
-
+#include "window.h"
+#include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <iostream>
 #include <string>
+
 
 /* -------------------------------------------------------------------------- */
 /*                               Window Manager                               */
@@ -28,11 +28,11 @@ gl::WindowManager::~WindowManager() {
 }
 
 static gl::WindowManager* window_factory_instance;
-std::shared_ptr<gl::WindowManager> gl::WindowManager::instance() {
+gl::WindowManager& gl::WindowManager::instance() {
     if (!window_factory_instance) {
         window_factory_instance = new gl::WindowManager();
     }
-    return std::shared_ptr<gl::WindowManager>(window_factory_instance);
+    return *window_factory_instance;
 }
 
 gl::Window& gl::WindowManager::create() {
@@ -65,7 +65,6 @@ gl::Window::~Window() {
 /* -------------------------------------------------------------------------- */
 /*                              Member Functions                              */
 /* -------------------------------------------------------------------------- */
-
 void gl::Window::makeCurrent() {
     glfwMakeContextCurrent((GLFWwindow*)m_pointer);
 }

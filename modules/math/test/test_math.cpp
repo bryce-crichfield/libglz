@@ -1,5 +1,5 @@
-#include "math/m4.h"
-#include "math/v2.h"
+#include "m4.h"
+#include "v2.h"
 #include <iostream> 
 
 using namespace gl;
